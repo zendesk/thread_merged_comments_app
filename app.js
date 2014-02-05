@@ -50,7 +50,6 @@
                       return audit.via.source.rel === 'merge' && audit.via.source.from.ticket_ids; 
                      })
                     .value();
-      console.log(merges);
       // get comments associated with losing tickets...
       if (merges.length > 0) {
         this.findComments({ merges : merges });

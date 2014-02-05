@@ -19,7 +19,7 @@ This app generates a printer-friendly HTML file containing comments from the cur
 ## Limitations:
 
 * The app is confirmed to work in the latest versions Firefox and Chrome. Browsers that do not support HTML5 Blob implementations may not work with this app.
-* In Zendesk it is possible to merge ticket A into ticket B and then merge ticket B into ticket C. If this app is run on ticket C, it will only get retrieve comments present on ticket B (comments on ticket A will be excluded). In other words, the app will only get comments for the tickets that were mered directly into the current ticket.
+* In Zendesk it is possible to merge ticket A into ticket B and then merge ticket B into ticket C. If this app is run on ticket C, it will only retrieve comments present on ticket B (comments on ticket A will be excluded). In other words, the app will only get comments for the tickets that were mered directly into the current ticket.
 
 ## Set-up/installation instructions:
 
