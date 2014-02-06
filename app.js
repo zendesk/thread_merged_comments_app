@@ -80,6 +80,11 @@
       this.when.apply(this, requests).done(_.bind(function(){
         this.findAuthors({ comments      : _.flatten(arguments),
                            mergedTickets : tickets });
+      }, this))
+      .fail(_.bind(function(){
+        var message = 'Unable to generate threaded comment report - ' +
+                      'this ticket contains merges from tickets that have been deleted.';
+        this.switchTo('error', { message: message });
       }, this));
 
     },
