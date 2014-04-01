@@ -56,7 +56,7 @@
         this.findComments({ merges : merges });
       //...or pass a null value; we only need comments for the current ticket
       } else {
-        this.findComments({ merges : null })
+        this.findComments({ merges : null });
       }
     },
 
