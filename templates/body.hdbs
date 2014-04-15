@@ -14,7 +14,7 @@
     <h3>CCs</h3>
     {{#each ccs}}
     <p>{{cc}}</p>
-    {{/each}}}
+    {{/each}}
   </div>
   {{/if}}
   <div id="fields">
