@@ -29,7 +29,7 @@
   <div class="comment">
     <div class="mast">
       <span class="author">{{this.author_name}}</span>
-      <time class="date" datetime="{{this.created_at}}">{{this.created_at}}</time>
+      <time class="date" datetime="{{this.pretty_date}}">{{this.pretty_date}}</time>
       {{#unless this.public}}
         <span class="internal_note"> Internal note </span>
       {{/unless}}

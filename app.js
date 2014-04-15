@@ -63,7 +63,9 @@
     findComments: function(data) {
       // get losing ticket ids from merge events if they exist
       var tickets = data.merges ? _.chain(data.merges)
-                                   .map(function(merge){ return merge.via.source.from.ticket_ids; })
+                                   .map(function(merge){
+                                     return merge.via.source.from.ticket_ids;
+                                   })
                                    .flatten()
                                    .value() : [];
       var id = this.ticket().id();
@@ -90,7 +92,12 @@
     },
 
     findAuthors: function(data) {
-      var users = _.map(data.comments, function(comment){ return comment.author_id; });
+      var users = _.chain(data.comments)
+                   .map(function(comment){
+                     return comment.author_id;
+                   })
+                   .uniq()
+                   .value();
       var requests = [];
       for (var i = 0; i < users.length; ++i){
         requests.push(this.ajax('getUser', users[i]));
@@ -99,10 +106,13 @@
         // generate a lookup object for comment author names
         var authorLookup = _.chain(arguments)
                             .flatten()
-                            .filter(function(result){ return result.user; })
-                            .map(function(result){ return _.pick(result.user, 'name', 'id'); })
-                            .reduce(
-                              function(memo, result){
+                            .filter(function(result){
+                              return result.user;
+                            })
+                            .map(function(result){
+                              return _.pick(result.user, 'name', 'id');
+                            })
+                            .reduce(function(memo, result){
                                 memo[result.id] = result.name;
                                 return memo; }, {}
                              )
@@ -114,13 +124,17 @@
     },
 
     prepareData: function(data) {
-      // transform comments by adding author name and making date more readable
-      _.each(data.comments, function(comment){ comment.author_name = data.authors[comment.author_id];
-                                               comment.created_at  = comment.created_at
-                                               .split('T').join(' ').replace('Z', '  UTC');
-                                               return comment; });
-      // sort comments, using ID as a proxy for date
-      var sorted = _.sortBy(data.comments, function(comment){ return comment.id; }).reverse();
+      // transform comments by adding author name and making a pretty date
+      _.each(data.comments, function(comment){
+          comment.author_name = data.authors[comment.author_id];
+          comment.pretty_date  = comment.created_at
+          .split('T').join(' ').replace('Z', '  UTC');
+          return comment;
+        });
+      // sort comments, parsing epoch from the date
+      var sorted = _.sortBy(data.comments, function(comment){
+          return Date.parse(comment.created_at);
+        }).reverse();
       // create an object to hold sorted comments and data from current ticket
       var ticket = this.ticket();
       var templateData = { comments       : sorted,
@@ -166,8 +180,12 @@
         return this.when.apply(this, nextPages).then(function(){
           var entities = _.chain(arguments)
                           .flatten()
-                          .filter(function(item){ return (_.isObject(item) && _.has(item, a.entity)); })
-                          .map(function(item){ return item[a.entity]; })
+                          .filter(function(item){
+                            return (_.isObject(item) && _.has(item, a.entity));
+                          })
+                          .map(function(item){
+                            return item[a.entity];
+                          })
                           .value();
           results.push(entities);
         }).then(function(){
